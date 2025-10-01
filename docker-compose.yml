@@ -1,0 +1,34 @@
+services:
+  typesense:
+    image: typesense/typesense:29.0
+    restart: on-failure
+    ports:
+      - '8108:8108'
+    volumes:
+      - ./volumes/typesense-data:/data
+    command: '--data-dir /data --api-key=xyz --enable-cors'
+
+  postgres:
+    container_name: ygocs-db
+    image: postgres:18-alpine3.22
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ygocs
+    ports:
+      - '6432:5432'
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql
+
+  pgadmin:
+    container_name: ygocs-admin
+    image: dpage/pgadmin4:9.8
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ygocs@ygocs.com
+      PGADMIN_DEFAULT_PASSWORD: ygocs
+    ports:
+      - '6050:80'
+    volumes:
+      - ./volumes/pgadmin:/var/lib/pgadmin
