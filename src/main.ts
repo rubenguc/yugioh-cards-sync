@@ -15,7 +15,6 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   await app.listen(envs.port, '0.0.0.0');
-
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
