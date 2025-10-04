@@ -6,10 +6,12 @@ import { SyncHistoryModule } from './sync-history/sync-history.module';
 import { YgoproModule } from './ygopro/ygopro.module';
 import { CardModule } from './card/card.module';
 import { AppService } from './app.service';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   controllers: [AppController],
   imports: [
+    LoggerModule.forRoot(),
     PrismaModule.forRoot({
       isGlobal: true,
     }),
