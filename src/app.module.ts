@@ -7,6 +7,7 @@ import { YgoproModule } from './ygopro/ygopro.module';
 import { CardModule } from './card/card.module';
 import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   controllers: [AppController],
@@ -19,6 +20,7 @@ import { LoggerModule } from 'nestjs-pino';
     SyncHistoryModule,
     YgoproModule,
     CardModule,
+    StorageModule,
   ],
   providers: [AppService],
 })

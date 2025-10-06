@@ -1,12 +1,13 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { YgoproService } from './ygopro/ygopro.service';
 import { SyncHistoryService } from './sync-history/sync-history.service';
 import { CardParams } from './ygopro/ygopro.interface';
 import { CardService } from './card/card.service';
 import { TypesenseService } from './typesense/typesense.service';
+import { StorageService } from './storage/storage.service';
 
 @Injectable()
-export class AppService implements OnModuleInit {
+export class AppService {
   private logger = new Logger('AppService');
 
   constructor(
@@ -14,11 +15,8 @@ export class AppService implements OnModuleInit {
     private readonly syncHistoryService: SyncHistoryService,
     private readonly ygoproService: YgoproService,
     private readonly cardService: CardService,
+    private readonly storageService: StorageService,
   ) {}
-
-  async onModuleInit() {
-    await this.syncDatabase();
-  }
 
   async syncDatabase() {
     try {
@@ -40,18 +38,20 @@ export class AppService implements OnModuleInit {
 
       const newLastCardId = cards[0].id;
 
-      await this.cardService.bulkInsert(cards);
+      const newCars = await this.storageService.uploadCards(cards);
 
-      await this.typeService.bulkInsert(cards);
+      await this.cardService.bulkInsert(newCars);
+
+      await this.typeService.bulkInsert(newCars);
 
       await this.syncHistoryService.createSyncHistory({
         database_version,
         last_update,
         last_card_id: newLastCardId,
       });
-      this.logger.log('Sync completed');
+      this.logger.log('sync_completed');
     } catch (error) {
-      this.logger.error('Error syncing database', error);
+      this.logger.error(error, 'error_syncing_database');
     }
   }
 

@@ -10,6 +10,13 @@ interface EnvVars {
   TYPESENSE_PORT: number;
   TYPESENSE_API_KEY: string;
   TYPESENSE_PROTOCOL: string;
+
+  CLOUDFLARE_R2_BUCKET_NAME: string;
+  CLOUDFLARE_ACCOUNT_ID: string;
+  CLOUDFLARE_R2_ACCESS_KEY_ID: string;
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY: string;
+  CLOUDFLARE_MODE: string;
+  CLOUDFLARE_DEV_DOMAIN: string;
 }
 
 const envsSchema = joi
@@ -20,6 +27,16 @@ const envsSchema = joi
     TYPESENSE_PORT: joi.number().required(),
     TYPESENSE_API_KEY: joi.string().required(),
     TYPESENSE_PROTOCOL: joi.string().required(),
+    CLOUDFLARE_R2_BUCKET_NAME: joi.string().required(),
+    CLOUDFLARE_ACCOUNT_ID: joi.string().required(),
+    CLOUDFLARE_R2_ACCESS_KEY_ID: joi.string().required(),
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY: joi.string().required(),
+    CLOUDFLARE_MODE: joi.string().valid('dev', 'production').required(),
+    CLOUDFLARE_DEV_DOMAIN: joi.string().when('CLOUDFLARE_MODE', {
+      is: 'dev',
+      then: joi.string().required(),
+      otherwise: joi.string().optional(),
+    }),
   })
   .unknown(true);
 
@@ -40,4 +57,10 @@ export const envs = {
   typesensePort: envVars.TYPESENSE_PORT,
   typesenseApiKey: envVars.TYPESENSE_API_KEY,
   typesenseProtocol: envVars.TYPESENSE_PROTOCOL,
+  cloudflareR2BucketName: envVars.CLOUDFLARE_R2_BUCKET_NAME,
+  cloudflareAccountId: envVars.CLOUDFLARE_ACCOUNT_ID,
+  cloudflareR2AccessKeyId: envVars.CLOUDFLARE_R2_ACCESS_KEY_ID,
+  cloudflareR2SecretAccessKey: envVars.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+  cloudflareMode: envVars.CLOUDFLARE_MODE,
+  cloudflareDevDomain: envVars.CLOUDFLARE_DEV_DOMAIN,
 };

@@ -6,6 +6,7 @@ import {
 import { AppModule } from './app.module';
 import { envs } from './config/env';
 import { Logger } from 'nestjs-pino';
+import { AppService } from './app.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,5 +23,9 @@ async function bootstrap() {
 
   await app.listen(envs.port, '0.0.0.0');
   logger.log(`Application is running on: ${await app.getUrl()}`);
+
+  const appService = app.get(AppService);
+
+  await appService.syncDatabase();
 }
 bootstrap();
