@@ -8,10 +8,12 @@ import { CardModule } from './card/card.module';
 import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
 import { StorageModule } from './storage/storage.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   controllers: [AppController],
   imports: [
+    ScheduleModule.forRoot(),
     LoggerModule.forRoot(),
     PrismaModule.forRoot({
       isGlobal: true,

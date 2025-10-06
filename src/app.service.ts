@@ -5,6 +5,7 @@ import { CardParams } from './ygopro/ygopro.interface';
 import { CardService } from './card/card.service';
 import { TypesenseService } from './typesense/typesense.service';
 import { StorageService } from './storage/storage.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AppService {
@@ -18,6 +19,7 @@ export class AppService {
     private readonly storageService: StorageService,
   ) {}
 
+  @Cron(CronExpression.EVERY_DAY_AT_11PM)
   async syncDatabase() {
     try {
       const { shouldSync, last_card_id, database_version, last_update } =
